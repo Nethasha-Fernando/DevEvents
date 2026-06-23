@@ -186,14 +186,22 @@ const EventTags = ({ tags }: { tags: string[] }) => (
 );
 
 const EventDetails = async ({ params }: { params: Promise<{ slug: string }> }) => {
-    'use cache';
-    cacheLife('hours');
+    // 'use cache';
+    // cacheLife('hours');
 
     const { slug } = await params;
 
+    console.log(" Slug:", slug);
+
     await connectDB();
 
-    const event = await Event.findOne({ slug }).lean();
+    console.log(" DB connected");
+
+    const event = await Event.findOne({
+        slug: slug.toLowerCase().trim()
+    }).lean();
+
+    console.log(" Event:", event);
 
     if (!event) return notFound();
 
