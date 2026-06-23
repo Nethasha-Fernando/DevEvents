@@ -36,22 +36,57 @@
 // export default Page;
 //
 // //This passes all object properties as props to the component
+//
+// import ExploreBtn from "@/components/ExploreBtn";
+// import EventCard from "@/components/EventCard";
+// import { IEvent } from "@/database";
+// import { cacheLife } from "next/cache";
+// import connectDB from "@/lib/mongodb";
+// import Event from "@/database/event.model";
+//
+// const Page = async () => {
+//     // 'use cache'
+//     // cacheLife('hours')
+//
+//     await connectDB();
+//
+//     const eventsList = await Event.find().lean();
+//
+//     return (
+//         <section>
+//             <h1 className="text-center">
+//                 The Hub for Every Dev <br /> Event You Can't Miss
+//             </h1>
+//
+//             <p className="text-center mt-5">
+//                 Hackathons, Meetups, and Conferences, All in One Place
+//             </p>
+//
+//             <ExploreBtn />
+//
+//             <div id="events" className="mt-20 space-y-7">
+//                 <h3>Featured Events</h3>
+//
+//                 <ul className="events">
+//                     {eventsList?.map((event: IEvent) => (
+//                         <li key={event.title} className="list-none">
+//                             <EventCard {...event} />
+//                         </li>
+//                     ))}
+//                 </ul>
+//             </div>
+//         </section>
+//     );
+// };
+//
+// export default Page;
 
+
+import { Suspense } from "react";
 import ExploreBtn from "@/components/ExploreBtn";
-import EventCard from "@/components/EventCard";
-import { IEvent } from "@/database";
-import { cacheLife } from "next/cache";
-import connectDB from "@/lib/mongodb";
-import Event from "@/database/event.model";
+import EventsList from "@/components/EventsList";
 
-const Page = async () => {
-    'use cache'
-    cacheLife('hours')
-
-    await connectDB();
-
-    const eventsList = await Event.find().lean();
-
+const Page = () => {
     return (
         <section>
             <h1 className="text-center">
@@ -67,13 +102,9 @@ const Page = async () => {
             <div id="events" className="mt-20 space-y-7">
                 <h3>Featured Events</h3>
 
-                <ul className="events">
-                    {eventsList?.map((event: IEvent) => (
-                        <li key={event.title} className="list-none">
-                            <EventCard {...event} />
-                        </li>
-                    ))}
-                </ul>
+                <Suspense fallback={<p>Loading events...</p>}>
+                    <EventsList />
+                </Suspense>
             </div>
         </section>
     );
