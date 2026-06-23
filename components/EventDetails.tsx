@@ -20,7 +20,7 @@ const EventAgenda=({agendaItems}: {agendaItems:string[]}) => (
     <div className="agenda">
         <h2>Agenda</h2>
         <ul>
-            {agendaItems.map((item) => (
+            {agendaItems?.map((item) => (
                 <li key={item}>{item}</li>
             ))}
         </ul>
@@ -29,7 +29,7 @@ const EventAgenda=({agendaItems}: {agendaItems:string[]}) => (
 
 const EventTags = ({ tags }: { tags: string[] }) => (
     <div className="flex flex-row gap-1.5 flex-wrap">
-        {tags.map((tag) => (
+        {tags?.map((tag) => (
             <div key={tag} className="pill">
                 {tag}
             </div>
@@ -50,26 +50,26 @@ const EventDetails = async ({params}: {params:Promise<string>})=> {
         const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
             next: {revalidate: 60}
         });
-        if (!request.ok) {
-            if (request.status === 404) {
-                return notFound();
-            }
-            throw new Error('Failed to fetch event');
-        }
+        // if (!request.ok) {
+        //     if (request.status === 404) {
+        //         return notFound();
+        //     }
+        //     throw new Error('Failed to fetch event');
+        // }
 
         //const event = await request.json(); //this event comes from the backend go to file and c
         const response = await request.json();
         event = response.event;
 
-        if (!event){
-            return notFound(); //404 from next
-        }
+        // if (!event){
+        //     return notFound(); //404 from next
+        // }
     }catch(error){
         console.error('Error fetching event: ',error);
         return notFound();
     }
 
-    if (!event.description) return notFound();
+    // if (!event.description) return notFound();
     const bookings=10;
 
     const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
@@ -77,36 +77,36 @@ const EventDetails = async ({params}: {params:Promise<string>})=> {
         <section id="event">
             <div className="header">
                 <h1>Event description</h1>
-                <p>{event.description}</p>
+                <p>{event?.description}</p>
             </div>
             <div className="details">
                 {/* Left Side - Event Contect */}
                 <div className="content">
-                    <Image src={event.image} alt="Event Banner" width={800} height={800} className="banner"/>
+                    <Image src={event?.image?.trim() || "/placeholder.png"} alt="Event Banner" width={800} height={800} className="banner"/>
                     <section className="flex-col-gap-2">
                         <h2>Overview</h2>
-                        <p>{event.overview}</p>
+                        <p>{event?.overview}</p>
                     </section>
 
                     <section className="flex-col-gap-2">
                         <h2>Event Details</h2>
-                        <EventDetailItem icon="/icons/calendar.svg" alt="calendar" label={event.date}/>
-                        <EventDetailItem icon="/icons/clock.svg" alt="clock" label={event.time}/>
-                        <EventDetailItem icon="/icons/pin.svg" alt="pin" label={event.location}/>
-                        <EventDetailItem icon="/icons/mode.svg" alt="mode" label={event.mode}/>
-                        <EventDetailItem icon="/icons/audience.svg" alt="audience" label={event.audience}/>
+                        <EventDetailItem icon="/icons/calendar.svg" alt="calendar" label={event?.date}/>
+                        <EventDetailItem icon="/icons/clock.svg" alt="clock" label={event?.time}/>
+                        <EventDetailItem icon="/icons/pin.svg" alt="pin" label={event?.location}/>
+                        <EventDetailItem icon="/icons/mode.svg" alt="mode" label={event?.mode}/>
+                        <EventDetailItem icon="/icons/audience.svg" alt="audience" label={event?.audience}/>
                     </section>
 
                     {/*<EventAgenda agendaItems={JSON.parse(event.agenda[0])}/>*/}
-                    <EventAgenda agendaItems={event.agenda}/>
+                    <EventAgenda agendaItems={event?.agenda}/>
 
                     <section className="flex-col-gap-2">
                         <h2>About the Organizer</h2>
-                        <p>{event.organizer}</p>
+                        <p>{event?.organizer}</p>
                     </section>
 
                     {/*<EventTags tags={JSON.parse(tags[0])} />*/}
-                    <EventTags tags={event.tags}/>
+                    <EventTags tags={event?.tags}/>
 
                 </div>
                 {/* Right Side - Booking Form */}
