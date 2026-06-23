@@ -39,7 +39,7 @@ const EventTags = ({ tags }: { tags: string[] }) => (
 
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+//const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const EventDetails = async ({params}: {params:Promise<string>})=> {
     'use cache'
@@ -47,8 +47,8 @@ const EventDetails = async ({params}: {params:Promise<string>})=> {
     const slug = await params; // is await cz if promise?
     let event;
     try {
-        const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
-            next: {revalidate: 60}
+        const request = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ''}/api/events/${slug}`, {
+            next: { revalidate: 60 }
         });
          if (!request.ok) {
              if (request.status === 404) {
