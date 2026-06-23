@@ -50,20 +50,20 @@ const EventDetails = async ({params}: {params:Promise<string>})=> {
         const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
             next: {revalidate: 60}
         });
-        // if (!request.ok) {
-        //     if (request.status === 404) {
-        //         return notFound();
-        //     }
-        //     throw new Error('Failed to fetch event');
-        // }
+         if (!request.ok) {
+             if (request.status === 404) {
+                 return notFound();
+             }
+             throw new Error('Failed to fetch event');
+         }
 
         //const event = await request.json(); //this event comes from the backend go to file and c
         const response = await request.json();
         event = response.event;
 
-        // if (!event){
-        //     return notFound(); //404 from next
-        // }
+         if (!event){
+             return notFound(); //404 from next
+         }
     }catch(error){
         console.error('Error fetching event: ',error);
         return notFound();
